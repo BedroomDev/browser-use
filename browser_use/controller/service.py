@@ -26,8 +26,8 @@ logger = logging.getLogger(__name__)
 
 
 class Controller:
-	def __init__(self, keep_open: bool = False, variables: Optional[dict[str, Any]] = None):
-		self.browser = Browser(keep_open=keep_open)
+	def __init__(self, keep_open: bool = False, variables: Optional[dict[str, Any]] = None, webdriverpath: str = ""):
+		self.browser = Browser(keep_open=keep_open, webdriverpath=webdriverpath)
 		self.variables = variables or {} 
 		self.registry = Registry()
 		self._register_default_actions()

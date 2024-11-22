@@ -29,11 +29,12 @@ logger = logging.getLogger(__name__)
 
 
 class Browser:
-	def __init__(self, headless: bool = False, keep_open: bool = False):
+	def __init__(self, headless: bool = False, keep_open: bool = False, webdriverpath: str = ""):
 		self.headless = headless
 		self.keep_open = keep_open
 		self.MINIMUM_WAIT_TIME = 0.5
 		self.MAXIMUM_WAIT_TIME = 5
+		self.webdriverpath = webdriverpath
 		self._tab_cache: dict[str, TabInfo] = {}
 		self._current_handle = None
 		self._ob = Screenshot.Screenshot()
@@ -69,7 +70,12 @@ class Browser:
 			chrome_options.add_argument('--disable-renderer-backgrounding')
 
 			# Initialize the Chrome driver with better error handling
-			service = ChromeService(ChromeDriverManager().install())
+			if self.webdriverpath and os.path.exists(self.webdriverpath):
+				print(f"using webdriver path {self.webdriverpath}")
+				service = ChromeService(self.webdriverpath)
+			else:
+				print(f"installing using ChromeDriverManager")
+				service = ChromeService(ChromeDriverManager().install())
 			driver = webdriver.Chrome(service=service, options=chrome_options)
 
 			# Execute stealth scripts
